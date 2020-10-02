@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class category(models.model):
+class kind_food(models.model):
     title = models.CharField(max_length=10,verbose_name='Titulo')
     description = models.TextField(max_lenght=50,verbose_name='Descripcion')
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='creado el')
@@ -20,7 +20,7 @@ class category(models.model):
 class food(models.model):
     name = models.CharField(max_length=10,verbose_name='Nombre')
     calories = models.IntegerField(verbose_name="Calorias")
-    category = models.ManyToManyField(category, verbose_name=("Categoria"))
+    category = models.ManyToManyField(kind_food, verbose_name=("Categoria"))
 
     class Meta:
         verbose_name='Alimento'
@@ -29,7 +29,7 @@ class food(models.model):
     def __str__(self):
         return self.name
 
-class menu(models.model):
+class meal(models.model):
     choices=[
         'Lunes',
         'Martes',
@@ -41,6 +41,7 @@ class menu(models.model):
     day = models.CharField(choices=choices,default='Lunes')
     food = models.ManyToManyField(food,verbose_name='comidas')
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name='Menu'
