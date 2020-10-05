@@ -4,24 +4,14 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class category(models.model):
-    title = models.CharField(max_length=10,verbose_name='Titulo')
-    description = models.TextField(max_lenght=50,verbose_name='Descripcion')
-    created_at = models.DateTimeField(auto_now_add=True,verbose_name='creado el')
 
-    class Meta:
-        verbose_name='Categoria'
-        verbose_name_plural='Categorias'
-
-    def __str__(self):
-        return self.title
-
-
-class food(models.model):
-    name = models.CharField(max_length=10,verbose_name='Nombre')
+class food(models.Model):
+    
+    name = models.CharField(max_length=50,verbose_name='Nombre')
     calories = models.IntegerField(verbose_name="Calorias")
-    category = models.ManyToManyField(category, verbose_name=("Categoria"))
+    
 
+     
     class Meta:
         verbose_name='Alimento'
         verbose_name_plural='Alimentos'
@@ -29,25 +19,37 @@ class food(models.model):
     def __str__(self):
         return self.name
 
-class menu(models.model):
-    choices=[
-        'Lunes',
-        'Martes',
-        'Miercoles',
-        'Jueves',
-        'Viernes',
-        'Sabado',
-        'Domingo']
-    day = models.CharField(choices=choices,default='Lunes')
-    food = models.ManyToManyField(food,verbose_name='comidas')
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+class hora(models.Model):
+    hora_dia = models.CharField(max_length=20,verbose_name='Hora Del Dia')
 
     class Meta:
-        verbose_name='Menu'
+        verbose_name='Hora del dia'
+    
+    def __str__(self):
+        return self.hora_dia
+        
+        
+    
+class meal(models.Model):
+    choices=[
+        ('Lunes','Lunes'),
+        ('Martes','Martes'),
+        ('Miercoles','Miercoles'),
+        ('Jueves','Jueves'),
+        ('Viernes','Viernes'),
+        ('Sabado','Sabado'),
+        ('Domingo','Domingo')]
+    days = models.CharField(choices=choices,max_length=10,default='Lunes')
+    hora = models.ForeignKey(hora,on_delete=models.CASCADE,default='')
+    food = models.ForeignKey(food,on_delete=models.CASCADE,default='')
+    user = models.ForeignKey(User,editable=False,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name='Registros'
         
     def __str__(self):
-        return self.day
-
+        return self.days
 
 
 
